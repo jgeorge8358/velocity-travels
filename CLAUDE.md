@@ -22,17 +22,17 @@ osascript -l JavaScript backend/tests/gs_test.js "$PWD/backend/Code.gs" /tmp
 /usr/bin/ruby backend/tests/stub.rb
 
 # Phone preview over Wi-Fi: http://<Mac IP>:8080
-rsync -a --delete --delete-excluded --exclude FilesFromWork --exclude backend --exclude '*.md' --exclude '.*' ./ /tmp/velocity-preview/ && /usr/bin/ruby -run -e httpd /tmp/velocity-preview -p 8080 -b 0.0.0.0
+rsync -a --delete --delete-excluded --exclude backend --exclude '*.md' --exclude '.*' ./ /tmp/velocity-preview/ && /usr/bin/ruby -run -e httpd /tmp/velocity-preview -p 8080 -b 0.0.0.0
 
 # Shareable preview folder (no-index); upload this one, never the repo root
-OUT=../Velocity-Travels-Preview; rsync -a --exclude FilesFromWork --exclude backend --exclude '*.md' --exclude '.*' --exclude sitemap.xml --exclude robots.txt ./ $OUT/ && perl -pi -e 's#<meta name="theme-color"#<meta name="robots" content="noindex, nofollow">\n$&#' $OUT/index.html $OUT/privacy.html
+OUT=../Velocity-Travels-Preview; rsync -a --exclude backend --exclude '*.md' --exclude '.*' --exclude sitemap.xml --exclude robots.txt ./ $OUT/ && perl -pi -e 's#<meta name="theme-color"#<meta name="robots" content="noindex, nofollow">\n$&#' $OUT/index.html $OUT/privacy.html
 ```
 
 After changing CSS or JS, bump `?v=` in **both** index.html and privacy.html, or browsers keep the old file.
 
 ## Never publish
 
-`FilesFromWork/` holds private reference files and is git-ignored; `backend/` and `*.md` are internal. Every copy or upload must exclude them. Don't put anything personal from `FilesFromWork/` in the site or docs.
+`backend/` and `*.md` are internal. Every copy or upload of the site must exclude them. Keep personal details out of the site and docs; the repository is public at times.
 
 ## Architecture
 

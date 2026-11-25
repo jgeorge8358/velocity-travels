@@ -14,7 +14,6 @@ Website and quote-request form for Velocity Travels, a travel business based in 
 | `js/app.js` | Intro, menu, form and confirmation. Settings are at the top in `VT_CONFIG` |
 | `assets/` | Fonts (with licences), icons, sharing image, logo |
 | `backend/` | Google Sheets and email script, setup guide, plan, tests. **Not part of the website** |
-| `FilesFromWork/` | Private reference files, only on the owner's Mac and ignored by Git. **Never upload or share** |
 
 ## See it on your Mac
 
@@ -29,7 +28,7 @@ Then open http://localhost:8765. Press Ctrl + C to stop.
 Same Wi-Fi as the Mac:
 
 ```bash
-rsync -a --delete --delete-excluded --exclude FilesFromWork --exclude backend --exclude '*.md' --exclude '.*' ./ /tmp/velocity-preview/ && /usr/bin/ruby -run -e httpd /tmp/velocity-preview -p 8080 -b 0.0.0.0
+rsync -a --delete --delete-excluded --exclude backend --exclude '*.md' --exclude '.*' ./ /tmp/velocity-preview/ && /usr/bin/ruby -run -e httpd /tmp/velocity-preview -p 8080 -b 0.0.0.0
 ```
 
 Find the Mac's address with `ipconfig getifaddr en0`, then open `http://THAT-ADDRESS:8080` on the phone. Run the command again after changes.
@@ -39,7 +38,7 @@ Find the Mac's address with `ipconfig getifaddr en0`, then open `http://THAT-ADD
 Upload the sibling folder `Velocity-Travels-Preview` (for example to https://app.netlify.com/drop). It leaves out private files and asks search engines not to list it. **Never upload this project folder itself.** To refresh it:
 
 ```bash
-OUT=../Velocity-Travels-Preview; rsync -a --exclude FilesFromWork --exclude backend --exclude '*.md' --exclude '.*' --exclude sitemap.xml --exclude robots.txt ./ $OUT/ && perl -pi -e 's#<meta name="theme-color"#<meta name="robots" content="noindex, nofollow">\n$&#' $OUT/index.html $OUT/privacy.html
+OUT=../Velocity-Travels-Preview; rsync -a --exclude backend --exclude '*.md' --exclude '.*' --exclude sitemap.xml --exclude robots.txt ./ $OUT/ && perl -pi -e 's#<meta name="theme-color"#<meta name="robots" content="noindex, nofollow">\n$&#' $OUT/index.html $OUT/privacy.html
 ```
 
 ## Connect the form
@@ -55,7 +54,6 @@ Follow `backend/SETUP.md` (about 15 minutes with a Google account), then put the
 - [ ] Review the privacy policy and fill in its brackets
 - [ ] Move to a business email account
 - [ ] Try it on an iPhone, an Android phone and a Windows computer
-- [ ] Move `FilesFromWork` out of this folder
 
 | Placeholder | Where |
 |---|---|
