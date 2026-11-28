@@ -2,37 +2,37 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Marketing site and enquiry form for Velocity Travels, a travel business in Kottayam and Ernakulam, Kerala. Its purpose is to win clients, so the quote form is the most important thing on it. See README.md for launch status and placeholders, backend/PLAN.md for the backend design, backend/SETUP.md for deployment.
+Marketing site and enquiry form for Velocity Travels, a travel business in Kottayam and Ernakulam, Kerala. Its purpose is to win clients, so the quote form is the most important thing on it. See README.md for launch status and placeholders, DEPLOY.md for hosting on Cloudflare, backend/PLAN.md for the backend design, backend/SETUP.md for the Google Sheet setup.
 
 ## Commands
 
-There is no build step, framework, package manager or linter. On the owner's Mac `node` and `npm` don't run (Intel binary, no Rosetta), so the tooling uses system Ruby, Perl and `osascript` (macOS only).
+There is no build step, framework, package manager or linter. Several people work on this on macOS, Windows and Linux, so day-to-day tooling is Python 3.9+ standard library only (`python3` on macOS/Linux, `py` on Windows). Keep new tooling cross-platform and document the Windows form of any command. On the owner's Mac `node` and `npm` don't run (Intel binary, no Rosetta); the Mac-only checks below use `osascript`.
 
 ```bash
-# Local site (the "velocity" entry in .claude/launch.json)
-/usr/bin/ruby -run -e httpd . -p 8765 -b 127.0.0.1
+# Local site (the "velocity" entry in .claude/launch.json); serves only the site files
+python3 tools/serve.py                 # http://localhost:8765
+python3 tools/serve.py --phone         # 0.0.0.0:8080, prints the Wi-Fi address for phones
 
-# Syntax check a script
+# Zip for Cloudflare (allowlist of site files; noindex + _headers unless --live). See DEPLOY.md. Never upload the repo root.
+python3 tools/build_zip.py
+
+# macOS only: syntax check a script
 osascript -l JavaScript -e 'ObjC.import("Foundation");const s=ObjC.unwrap($.NSString.stringWithContentsOfFileEncodingError("js/app.js",4,null));try{new Function(s);"ok"}catch(e){e.message}'
 
-# Backend tests (one file, all checks; prints "N passed, M failed"). Writes team.html / receipt.html previews to the last argument.
+# macOS only: backend tests (one file, all checks; prints "N passed, M failed"). Writes team.html / receipt.html previews to the last argument.
 osascript -l JavaScript backend/tests/gs_test.js "$PWD/backend/Code.gs" /tmp
 
-# Fake Google endpoint for testing the form (modes are listed in the file)
-/usr/bin/ruby backend/tests/stub.rb
-
-# Phone preview over Wi-Fi: http://<Mac IP>:8080
-rsync -a --delete --delete-excluded --exclude backend --exclude '*.md' --exclude '.*' ./ /tmp/velocity-preview/ && /usr/bin/ruby -run -e httpd /tmp/velocity-preview -p 8080 -b 0.0.0.0
-
-# Shareable preview folder (no-index); upload this one, never the repo root
-OUT=../Velocity-Travels-Preview; rsync -a --exclude backend --exclude '*.md' --exclude '.*' --exclude sitemap.xml --exclude robots.txt ./ $OUT/ && perl -pi -e 's#<meta name="theme-color"#<meta name="robots" content="noindex, nofollow">\n$&#' $OUT/index.html $OUT/privacy.html
+# Fake Google endpoint for testing the form (modes are listed in the file; needs Ruby)
+ruby backend/tests/stub.rb
 ```
+
+The list of published files lives in `ALLOW` in tools/build_zip.py and is shared by serve.py. A new top-level site file or folder must be added there.
 
 After changing CSS or JS, bump `?v=` in **both** index.html and privacy.html, or browsers keep the old file.
 
 ## Never publish
 
-`backend/` and `*.md` are internal. Every copy or upload of the site must exclude them. Keep personal details out of the site and docs; the repository is public at times.
+`backend/`, `tools/` and `*.md` are internal. Every copy or upload of the site must exclude them. Keep personal details out of the site and docs; the repository is public at times.
 
 ## Architecture
 
