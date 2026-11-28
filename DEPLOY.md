@@ -12,6 +12,8 @@ From the project folder in Terminal:
 python3 tools/build_zip.py
 ```
 
+Works on macOS, Linux and Windows with Python 3.9 or newer, with nothing extra to install. On Windows, use `py tools\build_zip.py` (or `python tools\build_zip.py`) in PowerShell or Command Prompt. If Windows opens the Microsoft Store instead, install Python from python.org and tick "Add python.exe to PATH".
+
 It prints where the zip went, normally `../Velocity-Travels-Preview.zip` (next to the project folder), and how many files it holds (17 for the test site).
 
 What the script does:

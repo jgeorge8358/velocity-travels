@@ -2,7 +2,9 @@
 
 Website and quote-request form for Velocity Travels, a travel business based in Kottayam and Ernakulam, Kerala. Plain HTML, CSS and JavaScript: no framework, no build step.
 
-**Status:** website built and previewable. The enquiry backend is written but **not connected yet**, so form submissions are not delivered. Contact details are placeholders.
+**Status:** the test site is online on Cloudflare and the form delivers enquiries to the Google Sheet. Contact details are still placeholders, so it is not launched to customers yet.
+
+Several people work on this on macOS, Windows and Linux. Everything you need day to day runs with **Git** and **Python 3.9+**, nothing else to install.
 
 ## What's inside
 
@@ -13,47 +15,38 @@ Website and quote-request form for Velocity Travels, a travel business based in 
 | `css/styles.css` | All styling; the phone layout is the block at the end |
 | `js/app.js` | Intro, menu, form and confirmation. Settings are at the top in `VT_CONFIG` |
 | `assets/` | Fonts (with licences), icons, sharing image, logo |
+| `tools/` | `serve.py` (local site) and `build_zip.py` (Cloudflare upload). **Not part of the website** |
 | `backend/` | Google Sheets and email script, setup guide, plan, tests. **Not part of the website** |
+| `DEPLOY.md` | How to put the site on Cloudflare and go live |
 
-## See it on your Mac
+## Commands on each system
 
-```bash
-/usr/bin/ruby -run -e httpd . -p 8765 -b 127.0.0.1
-```
+Run these from the project folder. `python3` on macOS and Linux; on Windows use `py` (or `python`) and backslashes, for example `py tools\serve.py`.
 
-Then open http://localhost:8765. Press Ctrl + C to stop.
+| What | macOS / Linux | Windows |
+|---|---|---|
+| See the site on this computer | `python3 tools/serve.py` | `py tools\serve.py` |
+| See it on a phone (same Wi-Fi) | `python3 tools/serve.py --phone` | `py tools\serve.py --phone` |
+| Build the Cloudflare zip | `python3 tools/build_zip.py` | `py tools\build_zip.py` |
 
-## See it on your phone
-
-Same Wi-Fi as the Mac:
-
-```bash
-rsync -a --delete --delete-excluded --exclude backend --exclude tools --exclude '*.md' --exclude '.*' ./ /tmp/velocity-preview/ && /usr/bin/ruby -run -e httpd /tmp/velocity-preview -p 8080 -b 0.0.0.0
-```
-
-Find the Mac's address with `ipconfig getifaddr en0`, then open `http://THAT-ADDRESS:8080` on the phone. Run the command again after changes.
-
-## Share a preview online
-
-Build a zip of only the site files (hidden from Google) and upload it to Cloudflare. Step by step, including going live, is in DEPLOY.md. **Never upload this project folder itself.**
-
-```bash
-python3 tools/build_zip.py
-```
+- `serve.py` opens the site at http://localhost:8765. With `--phone` it prints the address to open on the phone (port 8080). Edits show up on reload; press Ctrl+C to stop. It serves only the website files, so `backend/` and the notes can't be opened from another device. If the phone can't connect, allow Python through the computer's firewall (Windows asks the first time; tick **Private networks**).
+- `build_zip.py` is explained in DEPLOY.md. **Never upload this project folder itself.**
+- Windows: if `py` or `python` opens the Microsoft Store, install Python from python.org and tick **Add python.exe to PATH**.
 
 ## Connect the form
 
-Follow `backend/SETUP.md` (about 15 minutes with a Google account), then put the web app URL in `formEndpoint` at the top of `js/app.js`. Until then the confirmation screen shows "Preview only".
+Already done for the test site. To set it up again or move accounts, follow `backend/SETUP.md` (about 15 minutes with a Google account), then put the web app URL in `formEndpoint` at the top of `js/app.js`. With an empty URL the confirmation screen shows "Preview only".
 
 ## Before launch
 
-- [ ] Connect the backend and send a real test for each trip type
+- [x] Connect the backend and send a real test
+- [ ] Send a test for each trip type, from an iPhone, an Android phone and a Windows computer
 - [ ] Replace the placeholders below
 - [ ] Confirm the general FAQ answers: booking and advance, how to pay, Sabarimala season, night airport pickup
 - [ ] Confirm claims: verified drivers, vehicles checked before every trip, driver languages, GST invoices, vehicle seat numbers
 - [ ] Review the privacy policy and fill in its brackets
 - [ ] Move to a business email account
-- [ ] Try it on an iPhone, an Android phone and a Windows computer
+- [ ] Buy a domain and go live (DEPLOY.md)
 
 | Placeholder | Where |
 |---|---|
@@ -69,22 +62,25 @@ Phone, email and WhatsApp for emails are set separately in the Google Sheet's **
 
 ## Making changes
 
-After editing CSS or JavaScript, change the `?v=` number in `index.html` and `privacy.html` so visitors get the new version.
+- After editing CSS or JavaScript, change the `?v=` number in **both** `index.html` and `privacy.html` so visitors get the new version. `build_zip.py` stops if they differ.
+- The phone layout is the `@media(max-width:639px)` block at the end of `css/styles.css`; keep phone-only changes there so desktop stays the same.
+- Backend tests (`backend/tests/gs_test.js`) currently run on macOS only:
 
-Run the backend tests with:
+  ```bash
+  osascript -l JavaScript backend/tests/gs_test.js "$PWD/backend/Code.gs" /tmp
+  ```
 
-```bash
-osascript -l JavaScript backend/tests/gs_test.js "$PWD/backend/Code.gs" /tmp
-```
+  On Windows or Linux, ask the person with the Mac to run them after changing `backend/Code.gs`.
+
+## Working together
+
+1. `git clone` the repository (not a downloaded zip, so line endings stay consistent), then run `serve.py` as above.
+2. Make a branch for each change: `git checkout -b your-change`.
+3. Commit, push the branch, and open a pull request for someone else to look at before it joins `main`.
+4. `git pull` before starting work, so you build and upload the latest version.
+
+Never commit customer data, passwords, screenshots with personal details, or the Google Sheet's contents.
 
 ## Licences
 
 Inter and Plus Jakarta Sans are under the SIL Open Font License; the licence files are in `assets/fonts`.
-
-## Working together
-
-1. `git clone` the repository, then start the local site as above. It needs only Ruby, or any simple web server.
-2. Make a branch for each change: `git checkout -b your-change`.
-3. Commit, push the branch, and open a pull request for someone else to look at before it joins `main`.
-
-The copy commands and backend tests above are for macOS. Never commit customer data, passwords, or the Google Sheet's contents.
