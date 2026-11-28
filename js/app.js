@@ -1,6 +1,6 @@
 window.VT_CONFIG = {
   whatsappNumber: '910000000000',
-  formEndpoint: '',
+  formEndpoint: 'https://script.google.com/macros/s/AKfycbzIDiunCgS9rWcjUh-rLnIuqxZ8FfwI4XDDPaNq_VXRqfo9JTAM4QczmuMMLdx9KGCM/exec',
   replyPromise: 'Our team is preparing your quote and will get back to you shortly.'
 };
 
