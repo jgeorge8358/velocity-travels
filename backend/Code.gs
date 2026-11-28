@@ -37,8 +37,8 @@ var SETTINGS = [
   ['Team emails', '', 'Who gets new leads. Separate with commas. Each address counts toward your daily email limit.'],
   ['Owners', 'Partner 1, Partner 2, Partner 3', 'Names for the Owner dropdown. Run Velocity > Set up / repair after changing.'],
   ['Business name', 'Velocity Travels', 'Shown as the sender name.'],
-  ['Phone', '+91 00000 00000', 'Shown to customers. Left out of emails until replaced.'],
-  ['WhatsApp number', '910000000000', 'Country code and number, digits only. Left out of emails until replaced.'],
+  ['Phone', '+91 85907 77960', 'Shown to customers. Left out of emails until replaced.'],
+  ['WhatsApp number', '918590777960', 'Country code and number, digits only. Left out of emails until replaced.'],
   ['Business email', 'hello@yourdomain.in', 'Where customer replies go. Left out until replaced.'],
   ['Website', 'https://www.yourdomain.in/', 'Left out of emails until replaced.'],
   ['Customer receipts', 'Yes', 'Yes or No. Emails the customer a copy if they gave an email.'],
@@ -604,7 +604,7 @@ function setupDashboard_(ss, leads) {
 function sendTestLead() {
   var to = teamEmails_()[0] || '';
   var r = handleEnquiry({
-    requestId: 'test-' + Utilities.getUuid(), reference: newReference_(), trip: 'pilgrimage', name: 'TEST Lead', code: '+91', phone: '9000000000', email: to, contact: 'WhatsApp',
+    requestId: 'test-' + Utilities.getUuid(), reference: newReference_(), trip: 'pilgrimage', name: 'TEST Lead', code: '+91', phone: '8590777960', email: to, contact: 'WhatsApp',
     onWhatsApp: true, best: ['Evening'], pickup: 'Kottayam', places: ['Sabarimala', 'Erumeli'], startDate: Utilities.formatDate(new Date(Date.now() + 14 * 864e5), TZ, 'yyyy-MM-dd'),
     adults: 6, children: 1, vehicle: 'Tempo Traveller', virtualQ: 'Yes', notes: 'This is a test. You can delete this row.', source: { source: 'test' }
   }, { test: true });
