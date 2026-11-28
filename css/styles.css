@@ -456,7 +456,11 @@ details[open]::details-content{block-size:auto}
   *,*::before,*::after{animation:none!important;transition:none!important}
   .js [data-reveal]:not(.in){opacity:1;transform:none}
   .svc:hover,.fab:hover{transform:none}
+  /* sending still needs a sign of life: a slow road and a gentle fade, no bouncing */
+  .sending .submit-bus::after{animation:dash .8s linear infinite!important}
+  .sending .submit-bus svg{animation:breathe 1.2s ease-in-out infinite!important}
 }
+@keyframes breathe{50%{opacity:.55}}
 
 .more-toggle,.wide{display:none}
 
